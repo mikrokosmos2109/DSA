@@ -14,6 +14,7 @@ Sample Output 1 :
  */
 
 
+
 /*
 	Note:
 	To get all the test cases accepted, make recursive calls in following order: Top, Down, Left, Right.
@@ -24,61 +25,54 @@ Sample Output 1 :
 #include<bits/stdc++.h>
 using namespace std;
 
-void printMtrx(int** arr, int n){
-    for(int i=0; i<n; i++){
-        for(int j=0; j<n; j++){
-            cout << arr[i][j] << " ";
-        }
-    }
-    cout << endl;
-}
-void ratInAMaze(int** arr, int n, int** sol, int r, int c){
-    if(r == n-1 && c == n-1){
-        sol[r][c] = 1;
-        printMtrx(sol, n);
-        sol[r][c] = 0;
-        return;
-    }
-    if(r < 0 || r >= n || c < 0 || c >= n || sol[r][c] == 1 || arr[r][c] == 0){
-        return;
-    }
-    sol[r][c] = 1;
-    ratInAMaze(arr, n, sol, r-1, c);
-    ratInAMaze(arr, n, sol, r+1, c);
-    ratInAMaze(arr, n, sol, r, c-1);
-    ratInAMaze(arr, n, sol, r, c+1);
-    sol[r][c] = 0;
-}
 
+void printSolution(int** solution,int n){
+	for(int i=0;i<n;i++){
+		for(int j=0;j<n;j++){
+			cout << solution[i][j] << " ";
+		}
+	}
+	cout<<endl;
+}
+void mazeHelp(int maze[][20],int n,int** solution,int x,int y){
+
+
+	if(x == n-1 && y == n-1){
+		solution[x][y] =1;
+		printSolution(solution,n);
+      	solution[x][y] =0;
+		return;
+	}
+	if(x>=n || x<0 || y>=n || y<0 || maze[x][y] ==0 || solution[x][y] ==1){
+		return;
+	}
+	solution[x][y] = 1;
+	mazeHelp(maze,n,solution,x-1,y);
+	mazeHelp(maze,n,solution,x+1,y);
+	mazeHelp(maze,n,solution,x,y-1);
+	mazeHelp(maze,n,solution,x,y+1);
+	solution[x][y] = 0;
+}
+void ratInAMaze(int maze[][20], int n){
+
+  int** solution = new int*[n];
+  for(int i=0;i<n;i++){
+  	solution[i] = new int[n];
+  }
+  mazeHelp(maze,n,solution,0,0);
+
+
+}
 int main(){
     int n;
-    cin >> n;
-    int** arr = new int*[n];
-    for(int i=0; i <n; i++){
-        arr[i] = new int[n];
+    cin>>n;
+    int maze[20][20];
+    for(int i=0; i<n; i++){
         for(int j=0; j<n; j++){
-            cin >> arr[i][j];
+            cin>>maze[i][j];
         }
     }
-    
-    int** sol = new int*[n];
-    
-    for(int i=0; i<n; i++){
-        sol[i] = new int[n];
-        for(int j=0; j<n; j++){
-            sol[i][j] = 0;
-        }
-    }
-    
-    ratInAMaze(arr, n, sol, 0, 0);
-    
-    for(int i=0; i<n; i++){
-        delete [] arr[i];
-        delete [] sol[i];
-    }
-    
-    delete [] arr;
-    delete [] sol;
-
-    return 0;
+    ratInAMaze( maze,n);
 }
+    
+
